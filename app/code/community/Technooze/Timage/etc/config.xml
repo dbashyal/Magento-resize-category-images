@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+* @category   Technooze/Modules/magento-how-tos
+* @package    Technooze_Timage
+* @author     Damodar Bashyal
+* @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*/
+-->
+<config>
+    <modules>
+        <Technooze_Timage>
+            <version>0.1.0</version>
+        </Technooze_Timage>
+    </modules>
+    <frontend>
+        <routers>
+            <timage>
+                <use>standard</use>
+                <args>
+                    <module>Technooze_Timage</module>
+                    <frontName>timage</frontName>
+                </args>
+            </timage>
+        </routers>
+        <layout>
+            <updates>
+                <timage>
+                    <file>timage.xml</file>
+                </timage>
+            </updates>
+        </layout>
+    </frontend>
+    <global>
+        <helpers>
+            <timage>
+                <class>Technooze_Timage_Helper</class>
+            </timage>
+        </helpers>
+        <blocks>
+            <timage>
+                <class>Technooze_Timage_Block</class>
+            </timage>
+        </blocks>
+    </global>
+</config>
