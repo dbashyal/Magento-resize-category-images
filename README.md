@@ -1,7 +1,7 @@
 Magento Resize Category Images
 ==============================
 
-This is a free magento extension/module to resize category images.
+This is a free magento extension/module to resize category images. Join the converstation at: http://su.pr/8MCLQM
 
 ## How to use this?
 
