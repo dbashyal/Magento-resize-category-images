@@ -16,3 +16,5 @@ This is a free magento extension/module to resize category images. Join the conv
 			<img src="<?php echo $this->helper('timage')->init($_category->getImageUrl())->resize(null, 120) ?>" alt="<?php echo $this->htmlEscape($_category->getName()) ?>"/>
 		</a>
 	</div>
+
+###visit: http://learntipsandtricks.com/ for more tips, tricks and codes.
