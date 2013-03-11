@@ -30,7 +30,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         
         if(empty($this->placeHolder))
         {
-            $this->placeHolder = Mage::getDesign()->getSkinUrl() . 'images/catalog/product/placeholder/image.jpg';
+            $this->placeHolder = Mage::getDesign()->getSkinUrl('images/catalog/product/placeholder/image.jpg');
         }
         $this->imagePath($this->rawImg);
         
