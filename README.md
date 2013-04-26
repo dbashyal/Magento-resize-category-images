@@ -17,4 +17,4 @@ This is a free magento extension/module to resize category images. Join the conv
 		</a>
 	</div>
 
-###visit: http://learntipsandtricks.com/ for more magento tips, tricks and codes.
+###visit: http://technooze.com/ for more magento tips, tricks and codes.
