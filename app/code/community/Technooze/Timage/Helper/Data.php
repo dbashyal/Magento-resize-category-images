@@ -14,6 +14,8 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         $rawImg = '',
         $img = false,
         $cacheDir = '',
+        $croppedCacheDir = '',
+        $croppedImage = '',
         $cachedImage = '',
         $cachedImageUrl = '',
         $ext = '',
@@ -39,8 +41,8 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         $this->height = false;
         $this->rawImg = '';
         $this->img = false;
-        $this->cacheDir = '';
         $this->cachedImage = '';
+        $this->croppedImage = '';
         $this->cachedImageUrl = '';
         $this->ext = '';
         $this->bgColor = array(255, 255, 255);
@@ -81,6 +83,18 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         return $this;
     }
 
+    public function setWidth($width=false)
+    {
+        $this->width = $width;
+        return $this;
+    }
+
+    public function setHeight($height=false)
+    {
+        $this->height = $height;
+        return $this;
+    }
+
     public function resize($width=false, $height=false)
     {
         if($width)
@@ -92,7 +106,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         {
             $this->height = $height;
         }
-        
+
         $this->cacheIt();
         
         return $this->cachedImageUrl();
@@ -109,15 +123,30 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * @return string|void
      */
-    public function cacheIt()
+    public function getCroppedCache()
     {
-        $this->cachedImage = $this->cacheDir . md5($this->img . $this->width . $this->height) . '.' .$this->ext;
+        $this->croppedImage = $this->croppedCacheDir . md5($this->img . $this->width . $this->height) . '.' .$this->ext;
         
         if(file_exists($this->cachedImage))
         {
             return $this->cachedImage;
         }
         
+        $this->cropIt();
+    }
+
+    /**
+     * @return string|void
+     */
+    public function cacheIt()
+    {
+        $this->cachedImage = $this->cacheDir . md5($this->img . $this->width . $this->height) . '.' .$this->ext;
+
+        if(file_exists($this->cachedImage))
+        {
+            return $this->cachedImage;
+        }
+
         $this->resizer();
     }
 
@@ -176,6 +205,65 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         return $this;
     }
 
+    private function cropIt($top=0, $left=0, $right=0, $bottom=0){
+        $this->imageObj->crop($top, $left, $right, $bottom);
+        $this->imageObj->save($this->croppedImage);
+        $this->img = $this->croppedImage;
+    }
+
+    /**
+     * Crop an image.
+     *
+     * @param int $top. Default value is 0
+     * @param int $left. Default value is 0
+     * @param int $right. Default value is 0
+     * @param int $bottom. Default value is 0
+     * @access public
+     * @return Technooze_Timage_Helper_Data
+     */
+    public function crop($top=0, $left=0, $right=0, $bottom=0)
+    {
+        $cache = $this->getCroppedCache();
+        if($cache){
+            $this->img = $cache;
+        } else {
+            try{
+                $width = $this->width;
+                $height = $this->height;
+                $origWidth = $this->getOriginalWidth();
+                $origHeight = $this->getOriginalHeight();
+                $cropWidth = $origWidth;
+                $cropHeight = $origHeight;
+                if($width && $height){
+                    // original height / original width x new width = new height
+                    $wRatio = $width / $height;
+                    $hRatio = $height / $width;
+                    if($origHeight >= $origWidth){
+                        if($height > $width){
+                            $cropHeight = $origWidth * $wRatio;
+                        } else {
+                            $cropHeight = $origWidth * $hRatio;
+                        }
+                    } else {
+                        if($width > $height){
+                            $cropWidth = $origHeight * $wRatio;
+                        } else {
+                            $cropWidth = $origHeight * $hRatio;
+                        }
+                    }
+                }
+                if(!$top && !$left && !$right && !$bottom){
+                    $right = $origWidth - $cropWidth;
+                    $bottom = $origHeight - $cropHeight;
+                }
+                $this->cropIt($top, $left, $right, $bottom);
+            } catch(Exception $e){
+                Mage::throwException($e->getMessage());
+            }
+        }
+        return $this;
+    }
+
     public function resizer()
     {
         try{
@@ -188,7 +276,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
             $this->imageObj->resize($this->width, $this->height);
             $this->imageObj->save($this->cachedImage);
         } catch(Exception $e){
-            //return $e->getMessage();
+            Mage::throwException($e->getMessage());
         }
     }
 
@@ -210,11 +298,38 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
     public function cacheDir()
     {
         $cache = BP . DS . 'media' . DS . 'catalog' . DS . 'cache' . DS;
-        
+        $cropCache = $cache . 'cropped' . DS;
+
+        if(!is_dir($cropCache))
+        {
+            mkdir($cropCache);
+        }
+
         if(!is_dir($cache))
         {
             mkdir($cache);
         }
         $this->cacheDir = $cache;
+        $this->croppedCacheDir = $cropCache;
+    }
+
+    /**
+     * Retrieve original image width
+     *
+     * @return int|null
+     */
+    public function getOriginalWidth()
+    {
+        return $this->imageObj->getOriginalWidth();
+    }
+
+    /**
+     * Retrieve original image height
+     *
+     * @return int|null
+     */
+    public function getOriginalHeight()
+    {
+        return $this->imageObj->getOriginalHeight();
     }
 }
