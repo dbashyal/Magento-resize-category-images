@@ -18,5 +18,10 @@ Join the converstation at:
 			<img src="<?php echo $this->helper('timage')->init($_category->getImageUrl())->resize(null, 120) ?>" alt="<?php echo $this->htmlEscape($_category->getName()) ?>"/>
 		</a>
 	</div>
+	
+# How to crop image?
+`
+<img src="<?php echo $this->helper('timage')->init($v->getImageUrl())->setWidth(230)->setHeight(200)->crop()->resize() ?>" alt="..."/>
+`
 
 ###visit: dltr.org for more [Magento Tips, Tricks and Free Extensions](http://dltr.org/).
