@@ -20,7 +20,7 @@ Join the converstation at:
 	</div>
 	
 # How to crop image?
-`
+```PHP
 <img src="<?php 
 	echo $this->helper('timage')
 			  ->init($v->getImageUrl())
@@ -29,6 +29,6 @@ Join the converstation at:
 			  ->crop()
 			  ->resize() 
 	?>" alt="alt text"/>
-`
+```
 
 ###visit: dltr.org for more [Magento Tips, Tricks and Free Extensions](http://dltr.org/).
