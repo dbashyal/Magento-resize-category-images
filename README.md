@@ -20,10 +20,12 @@ Join the converstation at:
 	</div>
 	
 # How to crop image?
+You can init image helper with path to image, then  you must pass width and height to crop image. After image is cropped its saved and ready to be resized using cropped image as source image to be resized. See example code below.
+
 ```PHP
 <img src="<?php 
 	echo $this->helper('timage')
-			  ->init($v->getImageUrl())
+			  ->init($_category->getImageUrl())
 			  ->setWidth(230)
 			  ->setHeight(200)
 			  ->crop()
