@@ -300,15 +300,16 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         $cache = BP . DS . 'media' . DS . 'catalog' . DS . 'cache' . DS;
         $cropCache = $cache . 'cropped' . DS;
 
-        if(!is_dir($cropCache))
-        {
-            mkdir($cropCache);
-        }
-
         if(!is_dir($cache))
         {
             mkdir($cache);
         }
+
+        if(!is_dir($cropCache))
+        {
+            mkdir($cropCache);
+        }
+        
         $this->cacheDir = $cache;
         $this->croppedCacheDir = $cropCache;
     }
