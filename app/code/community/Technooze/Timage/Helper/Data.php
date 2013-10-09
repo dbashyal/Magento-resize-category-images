@@ -47,7 +47,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         $this->ext = '';
         $this->bgColor = array(255, 255, 255);
         $this->imageObj = '';
-        $this->baseUrl = '';
+        $this->baseUrl = substr(Mage::getStoreConfig(Mage_Core_Model_Store::XML_PATH_UNSECURE_BASE_URL), 5);
         $this->keepTransparency = true;
         $this->aspectRatio = true;
         $this->constrainOnly = true;
@@ -282,10 +282,8 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
 
     public function imagePath($img='')
     {
-        $this->baseUrl = str_replace('index.php/', '', Mage::getBaseUrl());
-        $img = str_replace($this->baseUrl, '', $img);
+		$img = str_replace(array(Mage::getStoreConfig(Mage_Core_Model_Store::XML_PATH_UNSECURE_BASE_URL), Mage::getStoreConfig(Mage_Core_Model_Store::XML_PATH_SECURE_BASE_URL)), '', $img);
         $img = trim(str_replace('/', DS, $img), DS);
-        
         $this->img = BP . DS . $img;
         
         if((!file_exists($this->img) || !is_file($this->img)) && !empty($this->placeHolder))
