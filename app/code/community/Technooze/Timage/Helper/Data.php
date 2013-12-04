@@ -38,7 +38,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
     protected function _reset()
     {
         $this->width = null;
-        $this->height = false;
+        $this->height = null;
         $this->rawImg = '';
         $this->img = false;
         $this->cachedImage = '';
@@ -83,19 +83,19 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         return $this;
     }
 
-    public function setWidth($width=false)
+    public function setWidth($width=null)
     {
         $this->width = $width;
         return $this;
     }
 
-    public function setHeight($height=false)
+    public function setHeight($height=null)
     {
         $this->height = $height;
         return $this;
     }
 
-    public function resize($width=false, $height=false)
+    public function resize($width=null, $height=null)
     {
         if($width)
         {
