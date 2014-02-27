@@ -26,6 +26,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         $placeHolder = false,
 
         // image settings
+        $centerCrop = false,
         $keepTransparency = true,
         $aspectRatio = true,
         $constrainOnly = true,
@@ -126,7 +127,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getCroppedCache()
     {
-        $this->croppedImage = $this->croppedCacheDir . md5($this->img . $this->width . $this->height) . '.' .$this->ext;
+        $this->croppedImage = $this->croppedCacheDir . md5($this->img . $this->width . $this->height . $this->centerCrop) . '.' .$this->ext;
         
         if(file_exists($this->cachedImage))
         {
@@ -210,6 +211,53 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         $this->imageObj->crop($top, $left, $right, $bottom);
         $this->imageObj->save($this->croppedImage);
         $this->img = $this->croppedImage;
+    }
+
+
+    /**
+     * Crop an image from the center
+     * Using original image size and desired size
+     */
+    public function centerCrop() {
+
+        $this->centerCrop = true;
+
+        $cache = $this->getCroppedCache();
+        if($cache){
+            $this->img = $cache;
+        } else {
+            try{
+                $width = $this->width;
+                $height = $this->height;
+                $origWidth = $this->getOriginalWidth();
+                $origHeight = $this->getOriginalHeight();
+               
+                $ratio = max($width / $origWidth, $height / $origHeight);
+                $y = ($origHeight - $height / $ratio) / 2;
+                $newHeight = $height / $ratio;
+                $x = ($origWidth - $width / $ratio) / 2;
+                $newWidth = $width / $ratio;
+
+                if($origHeight > $newHeight) {
+                    $bottomCrop = $topCrop = ($origHeight - $newHeight) / 2;
+                } else {
+                     $bottomCrop = $topCrop = 0;
+                }
+
+                if($origWidth > $newWidth) {
+                    $leftCrop = $rightCrop = ($origWidth - $newWidth) / 2;
+                } else {
+                    $leftCrop = $rightCrop = 0;
+                }
+
+                $this->cropIt($topCrop, $leftCrop, $rightCrop, $bottomCrop);
+
+            } catch(Exception $e){
+                Mage::throwException($e->getMessage());
+            }
+        }
+        return $this;
+
     }
 
     /**
