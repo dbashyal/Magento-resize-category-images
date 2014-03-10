@@ -233,29 +233,29 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
                 $height = $this->height;
                 $origWidth = $this->getOriginalWidth();
                 $origHeight = $this->getOriginalHeight();
-                $cropWidth = $origWidth;
-                $cropHeight = $origHeight;
+                $cropHeightTrim = $cropWidthTrim = 0;
+
                 if($width && $height){
-                    // original height / original width x new width = new height
-                    $wRatio = $width / $height;
-                    $hRatio = $height / $width;
-                    if($origHeight >= $origWidth){
-                        if($height > $width){
-                            $cropHeight = $origWidth * $wRatio;
-                        } else {
-                            $cropHeight = $origWidth * $hRatio;
-                        }
-                    } else {
-                        if($width > $height){
-                            $cropWidth = $origHeight * $wRatio;
-                        } else {
-                            $cropWidth = $origHeight * $hRatio;
-                        }
+
+                    $wRatio = $width / $origWidth;
+                    $hRatio = $height / $origHeight;                    
+                    $cropRatio = min($height, $width) / max($height, $width);
+
+                    if ($wRatio < $hRatio) { // trim width
+                        $cropWidth = $origHeight * $cropRatio;
+                        $cropWidthTrim = round(($origWidth-$cropWidth)/2);
+                    } else { // trim height
+                        $cropHeight = $origWidth * $cropRatio;
+                        $cropHeightTrim = round(($origHeight-$cropHeight)/2);
                     }
                 }
+
                 if(!$top && !$left && !$right && !$bottom){
-                    $right = $origWidth - $cropWidth;
-                    $bottom = $origHeight - $cropHeight;
+                    if ($cropWidthTrim) {
+                        $right = $left = $cropWidthTrim;
+                    } elseif ($cropHeightTrim) {
+                        $top = $bottom = $cropHeightTrim;
+                    }
                 }
                 $this->cropIt($top, $left, $right, $bottom);
             } catch(Exception $e){
