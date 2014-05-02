@@ -237,16 +237,15 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
 
                 if($width && $height){
 
-                    $wRatio = $width / $origWidth;
-                    $hRatio = $height / $origHeight;                    
-                    $cropRatio = min($height, $width) / max($height, $width);
-
-                    if ($wRatio < $hRatio) { // trim width
+                    $origRatio = $origWidth / $origHeight;
+                    $cropRatio = $width / $height;                
+ 
+                    if ($origRatio >= $cropRatio) { // trim width
                         $cropWidth = $origHeight * $cropRatio;
-                        $cropWidthTrim = round(($origWidth-$cropWidth)/2);
+                        $cropWidthTrim = 0 - ($cropWidth - $origWidth) / 2;
                     } else { // trim height
-                        $cropHeight = $origWidth * $cropRatio;
-                        $cropHeightTrim = round(($origHeight-$cropHeight)/2);
+                        $cropHeight = $origWidth / $cropRatio;
+                        $cropHeightTrim = 0 - ($cropHeight - $origHeight) / 2;
                     }
                 }
 
