@@ -48,7 +48,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         $this->ext = '';
         $this->bgColor = array(255, 255, 255);
         $this->imageObj = '';
-        $this->baseUrl = substr(Mage::getStoreConfig(Mage_Core_Model_Store::XML_PATH_UNSECURE_BASE_URL), 5);
+        $this->baseUrl = $this->getBaseUrl();
         $this->keepTransparency = true;
         $this->aspectRatio = true;
         $this->constrainOnly = true;
@@ -57,7 +57,20 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         return $this;
     }
 
-    public function init($img=false)
+    /**
+     * @return string
+     */
+    private function getBaseUrl()
+    {
+        $baseUrl = Mage::getStoreConfig(Mage_Core_Model_Store::XML_PATH_UNSECURE_BASE_URL);
+        return preg_replace('#^https?://#', '//', $baseUrl);
+    }
+
+    /**
+     * @param string $img
+     * @return $this
+     */
+    public function init($img = '')
     {
         $this->_reset();
 
@@ -84,18 +97,31 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         return $this;
     }
 
+    /**
+     * @param null|int $width
+     * @return $this
+     */
     public function setWidth($width=null)
     {
         $this->width = $width;
         return $this;
     }
 
+    /**
+     * @param null|int $height
+     * @return $this
+     */
     public function setHeight($height=null)
     {
         $this->height = $height;
         return $this;
     }
 
+    /**
+     * @param null|int $width
+     * @param null|int $height
+     * @return string
+     */
     public function resize($width=null, $height=null)
     {
         if($width)
@@ -112,7 +138,10 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         
         return $this->cachedImageUrl();
     }
-    
+
+    /**
+     * @return string
+     */
     public function cachedImageUrl()
     {
         $img = str_replace(BP, '', $this->cachedImage);
@@ -153,6 +182,8 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
 
     /**
      * Set image quality, values in percentage from 0 to 100
+     * @param $quality
+     * @return $this
      */
     public function setQuality($quality)
     {
@@ -164,6 +195,8 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      * Guarantee, that image picture width/height will not be distorted.
      * Applicable before calling resize()
      * It is true by default.
+     * @param bool $bool
+     * @return $this
      */
     public function keepAspectRatio($bool=true)
     {
@@ -175,6 +208,8 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      * Guarantee, that image will have dimensions, set in $width/$height
      * Applicable before calling resize()
      * Not applicable, if keepAspectRatio(false)
+     * @param bool $bool
+     * @return $this
      */
     public function keepFrame($bool=true)
     {
@@ -186,6 +221,8 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      * Guarantee, that image picture will not be bigger, than it was.
      * Applicable before calling resize()
      * It is false by default
+     * @param bool $bool
+     * @return $this
      */
     public function constrainOnly($bool=false)
     {
@@ -206,6 +243,12 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         return $this;
     }
 
+    /**
+     * @param int $top
+     * @param int $left
+     * @param int $right
+     * @param int $bottom
+     */
     private function cropIt($top=0, $left=0, $right=0, $bottom=0){
         $this->imageObj->crop($top, $left, $right, $bottom);
         $this->imageObj->save($this->croppedImage);
@@ -220,7 +263,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      * @param int $right. Default value is 0
      * @param int $bottom. Default value is 0
      * @access public
-     * @return Technooze_Timage_Helper_Data
+     * @return $this
      */
     public function crop($top=0, $left=0, $right=0, $bottom=0)
     {
@@ -280,6 +323,9 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         }
     }
 
+    /**
+     * @param string $img
+     */
     public function imagePath($img='')
     {
 		$img = str_replace(array(Mage::getStoreConfig(Mage_Core_Model_Store::XML_PATH_UNSECURE_BASE_URL), Mage::getStoreConfig(Mage_Core_Model_Store::XML_PATH_SECURE_BASE_URL)), '', $img);
