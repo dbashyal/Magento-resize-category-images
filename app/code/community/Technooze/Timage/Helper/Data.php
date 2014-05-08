@@ -346,12 +346,12 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
 
         if(!is_dir($cache))
         {
-            mkdir($cache);
+            mkdir($cache, 777, true);
         }
 
         if(!is_dir($cropCache))
         {
-            mkdir($cropCache);
+            mkdir($cropCache, 777, true);
         }
 
         $this->cacheDir = $cache;
