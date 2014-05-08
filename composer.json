@@ -1,0 +1,15 @@
+{
+    "name": "dbashyal/magento_resize_category_images",
+    "license": "OSL-3.0",
+    "type": "magento-module",
+    "description": "Magento Resize Category Images",
+    "require": {
+        "magento-hackathon/magento-composer-installer": "*"
+    },
+    "authors":[
+        {
+            "name":"Damodar Bashyal",
+            "email":""
+        }
+    ]
+}

@@ -83,17 +83,17 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         {
             $this->rawImg = $img;
         }
-        
+
         $this->imagePath($this->rawImg);
-        
+
         $this->imageObj = new Varien_Image($this->img);
-        
+
         $path_parts = pathinfo($this->img);
-        
+
         $this->ext = $path_parts['extension'];
-        
+
         $this->cacheDir();
-        
+
         return $this;
     }
 
@@ -135,7 +135,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         }
 
         $this->cacheIt();
-        
+
         return $this->cachedImageUrl();
     }
 
@@ -146,7 +146,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
     {
         $img = str_replace(BP, '', $this->cachedImage);
         $img = trim(str_replace('\\', '/', $img), '/');
-        
+
         return $this->baseUrl . $img;
     }
 
@@ -156,12 +156,12 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
     public function getCroppedCache()
     {
         $this->croppedImage = $this->croppedCacheDir . md5($this->img . $this->width . $this->height) . '.' .$this->ext;
-        
+
         if(file_exists($this->cachedImage))
         {
             return $this->cachedImage;
         }
-        
+
         $this->cropIt();
     }
 
@@ -281,8 +281,8 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
                 if($width && $height){
 
                     $origRatio = $origWidth / $origHeight;
-                    $cropRatio = $width / $height;                
- 
+                    $cropRatio = $width / $height;
+
                     if ($origRatio >= $cropRatio) { // trim width
                         $cropWidth = $origHeight * $cropRatio;
                         $cropWidthTrim = 0 - ($cropWidth - $origWidth) / 2;
@@ -331,7 +331,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
 		$img = str_replace(array(Mage::getStoreConfig(Mage_Core_Model_Store::XML_PATH_UNSECURE_BASE_URL), Mage::getStoreConfig(Mage_Core_Model_Store::XML_PATH_SECURE_BASE_URL)), '', $img);
         $img = trim(str_replace('/', DS, $img), DS);
         $this->img = BP . DS . $img;
-        
+
         if((!file_exists($this->img) || !is_file($this->img)) && !empty($this->placeHolder))
         {
             $this->imagePath($this->placeHolder);
@@ -346,14 +346,14 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
 
         if(!is_dir($cache))
         {
-            mkdir($cache);
+            mkdir($cache, 777, true);
         }
 
         if(!is_dir($cropCache))
         {
-            mkdir($cropCache);
+            mkdir($cropCache, 777, true);
         }
-        
+
         $this->cacheDir = $cache;
         $this->croppedCacheDir = $cropCache;
     }
