@@ -1,6 +1,8 @@
 Magento Resize Category Images
 ==============================
 
+[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=dbashyal&url=https://github.com/dbashyal&title=Github Repos&language=&tags=github&category=software)
+
 This is a free magento extension/module to resize category images. 
 Join the converstation at: 
 [How to resize Magento e-Commerce category images](http://dltr.org/blog/magento/121/How-to-resize-Magento-e-Commerce-category-images)
