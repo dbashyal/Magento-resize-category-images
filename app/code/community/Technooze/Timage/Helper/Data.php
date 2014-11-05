@@ -86,8 +86,6 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
 
         $this->imagePath($this->rawImg);
 
-        $this->imageObj = new Varien_Image($this->img);
-
         $path_parts = pathinfo($this->img);
 
         $this->ext = $path_parts['extension'];
@@ -95,6 +93,15 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         $this->cacheDir();
 
         return $this;
+    }
+    
+    protected function _getImageObj()
+    {
+        if ($this->imageObj == null) {
+            $this->imageObj = new Varien_Image($this->img);
+        }
+        
+        return $this->imageObj;
     }
 
     /**
@@ -157,9 +164,9 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
     {
         $this->croppedImage = $this->croppedCacheDir . md5($this->img . $this->width . $this->height) . '.' .$this->ext;
 
-        if(file_exists($this->cachedImage))
+        if(file_exists($this->croppedImage))
         {
-            return $this->cachedImage;
+            return $this->croppedImage;
         }
 
         $this->cropIt();
@@ -250,8 +257,8 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      * @param int $bottom
      */
     private function cropIt($top=0, $left=0, $right=0, $bottom=0){
-        $this->imageObj->crop($top, $left, $right, $bottom);
-        $this->imageObj->save($this->croppedImage);
+        $this->_getImageObj()->crop($top, $left, $right, $bottom);
+        $this->_getImageObj()->save($this->croppedImage);
         $this->img = $this->croppedImage;
     }
 
@@ -310,14 +317,14 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
     public function resizer()
     {
         try{
-            $this->imageObj->quality($this->quality);
-            $this->imageObj->constrainOnly($this->aspectRatio);
-            $this->imageObj->keepAspectRatio($this->aspectRatio);
-            $this->imageObj->keepFrame($this->keepFrame);
-            $this->imageObj->keepTransparency($this->keepTransparency);
-            $this->imageObj->backgroundColor($this->bgColor);
-            $this->imageObj->resize($this->width, $this->height);
-            $this->imageObj->save($this->cachedImage);
+            $this->_getImageObj()->quality($this->quality);
+            $this->_getImageObj()->constrainOnly($this->aspectRatio);
+            $this->_getImageObj()->keepAspectRatio($this->aspectRatio);
+            $this->_getImageObj()->keepFrame($this->keepFrame);
+            $this->_getImageObj()->keepTransparency($this->keepTransparency);
+            $this->_getImageObj()->backgroundColor($this->bgColor);
+            $this->_getImageObj()->resize($this->width, $this->height);
+            $this->_getImageObj()->save($this->cachedImage);
         } catch(Exception $e){
             Mage::throwException($e->getMessage());
         }
@@ -365,7 +372,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getOriginalWidth()
     {
-        return $this->imageObj->getOriginalWidth();
+        return $this->_getImageObj()->getOriginalWidth();
     }
 
     /**
@@ -375,6 +382,6 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getOriginalHeight()
     {
-        return $this->imageObj->getOriginalHeight();
+        return $this->_getImageObj()->getOriginalHeight();
     }
 }
