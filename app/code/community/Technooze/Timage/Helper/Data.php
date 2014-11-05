@@ -72,6 +72,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function init($img = '')
     {
+        Varien_Profiler::start('TImage::helper::data:init');
         $this->_reset();
 
         if(empty($this->placeHolder))
@@ -91,7 +92,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         $this->ext = $path_parts['extension'];
 
         $this->cacheDir();
-
+        Varien_Profiler::stop('TImage::helper::data:init');
         return $this;
     }
     
@@ -257,9 +258,11 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      * @param int $bottom
      */
     private function cropIt($top=0, $left=0, $right=0, $bottom=0){
+        Varien_Profiler::start('TImage::helper::data:cropIt');
         $this->_getImageObj()->crop($top, $left, $right, $bottom);
         $this->_getImageObj()->save($this->croppedImage);
         $this->img = $this->croppedImage;
+        Varien_Profiler::stop('TImage::helper::data:cropIt');
     }
 
     /**
@@ -317,6 +320,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
     public function resizer()
     {
         try{
+            Varien_Profiler::start('TImage::helper::data:resizer');
             $this->_getImageObj()->quality($this->quality);
             $this->_getImageObj()->constrainOnly($this->aspectRatio);
             $this->_getImageObj()->keepAspectRatio($this->aspectRatio);
@@ -325,6 +329,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
             $this->_getImageObj()->backgroundColor($this->bgColor);
             $this->_getImageObj()->resize($this->width, $this->height);
             $this->_getImageObj()->save($this->cachedImage);
+            Varien_Profiler::stop('TImage::helper::data:resizer');
         } catch(Exception $e){
             Mage::throwException($e->getMessage());
         }
