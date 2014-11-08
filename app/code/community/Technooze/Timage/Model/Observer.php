@@ -33,15 +33,18 @@ class Technooze_Timage_Model_Observer
     }
 
     /**
-     * Clean full page cache
+     * Clean timage cache
      *
      * @return Technooze_Timage_Model_Observer
      */
-    public function cleanCache()
+    public function cleanCache(Varien_Event_Observer $observer)
     {
-        $cacheDir = Mage::getBaseDir('media') . DS . 'catalog' . DS . 'cache';
-        mageDelTree($cacheDir);
-        @mkdir($cacheDir);
+        $type = $observer->getType();
+        if($type == 'timage') {
+            $cacheDir = Mage::getBaseDir('media') . DS . 'catalog' . DS . 'cache';
+            mageDelTree($cacheDir);
+            @mkdir($cacheDir);
+        }
         return $this;
     }
 
