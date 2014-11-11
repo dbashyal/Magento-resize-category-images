@@ -86,7 +86,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
 
         $this->imagePath($this->rawImg);
 
-        $this->imageObj = new Varien_Image($this->img);
+        $this->imageObj = new Varien_Image();
 
         $path_parts = pathinfo($this->img);
 
@@ -157,9 +157,9 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
     {
         $this->croppedImage = $this->croppedCacheDir . md5($this->img . $this->width . $this->height) . '.' .$this->ext;
 
-        if(file_exists($this->cachedImage))
+        if(file_exists($this->croppedImage))
         {
-            return $this->cachedImage;
+            return $this->croppedImage;
         }
 
         $this->cropIt();
@@ -250,9 +250,16 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      * @param int $bottom
      */
     private function cropIt($top=0, $left=0, $right=0, $bottom=0){
-        $this->imageObj->crop($top, $left, $right, $bottom);
-        $this->imageObj->save($this->croppedImage);
-        $this->img = $this->croppedImage;
+        if ( !empty($this->imageObj) ) {
+            $this->imageObj = new Varien_Image($this->img);
+        }
+        try {
+            $this->imageObj->crop($top, $left, $right, $bottom);
+            $this->imageObj->save($this->croppedImage);
+            $this->img = $this->croppedImage;
+        } catch(Exception $e){
+            Mage::throwException($e->getMessage());
+        }
     }
 
     /**
@@ -309,6 +316,9 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
 
     public function resizer()
     {
+        if ( !empty($this->imageObj) ) {
+            $this->imageObj = new Varien_Image($this->img);
+        }
         try{
             $this->imageObj->quality($this->quality);
             $this->imageObj->constrainOnly($this->aspectRatio);
