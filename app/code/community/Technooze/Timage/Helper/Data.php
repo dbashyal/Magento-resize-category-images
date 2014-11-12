@@ -86,8 +86,6 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
 
         $this->imagePath($this->rawImg);
 
-        $this->imageObj = new Varien_Image();
-
         $path_parts = pathinfo($this->img);
 
         $this->ext = $path_parts['extension'];
@@ -250,7 +248,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      * @param int $bottom
      */
     private function cropIt($top=0, $left=0, $right=0, $bottom=0){
-        if ( !empty($this->imageObj) ) {
+        if ( empty($this->imageObj) ) {
             $this->imageObj = new Varien_Image($this->img);
         }
         try {
@@ -316,7 +314,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
 
     public function resizer()
     {
-        if ( !empty($this->imageObj) ) {
+        if ( empty($this->imageObj) ) {
             $this->imageObj = new Varien_Image($this->img);
         }
         try{
