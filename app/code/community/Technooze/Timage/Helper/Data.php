@@ -340,6 +340,15 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         $img = trim(str_replace('/', DS, $img), DS);
         $this->img = BP . DS . $img;
 
+        /** 
+         * First check this file on FS
+         * If it doesn't exist - try to download it from DB
+         */
+        $filename = str_replace("media" . DS, "", $img);
+        if(!file_exists($filename)) {
+            Mage::helper('core/file_storage_database')->saveFileToFilesystem($filename);
+        }
+        
         if((!file_exists($this->img) || !is_file($this->img)) && !empty($this->placeHolder))
         {
             $this->imagePath($this->placeHolder);
