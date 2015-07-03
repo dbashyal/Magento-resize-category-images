@@ -72,7 +72,11 @@ class Technooze_Timage_Model_Observer
             $entries = scandir($path);
             foreach ($entries as $entry) {
                 if ($entry != '.' && $entry != '..') {
-                    @unlink($path . DS . $entry);
+                    if (is_dir($path . DS . $entry)){
+                        self::timageDeleteCacheFiles($path . DS . $entry);
+                    } else {
+                        @unlink($path . DS . $entry);
+                    }
                 }
             }
             @rmdir($path);
