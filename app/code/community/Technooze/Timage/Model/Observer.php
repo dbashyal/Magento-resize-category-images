@@ -35,13 +35,18 @@ class Technooze_Timage_Model_Observer
     /**
      * Clean full page cache
      *
+     * @param $observer
+     *
      * @return Technooze_Timage_Model_Observer
      */
-    public function cleanCache()
+    public function cleanCache($observer)
     {
+        if ($observer->getType() != 'timage' ){
+            return;
+        }
         $cacheDir = Mage::getBaseDir('media') . DS . 'catalog' . DS . 'cache';
-        mageDelTree($cacheDir);
-        @mkdir($cacheDir);
+        $this->timageDeleteCacheFiles($cacheDir);
+        //@mkdir($cacheDir);
         return $this;
     }
 
@@ -53,5 +58,26 @@ class Technooze_Timage_Model_Observer
     {
         Mage::app()->getCacheInstance()->invalidateType('timage');
         return $this;
+    }
+
+    /**
+     * C3 function:
+     * Fixes the issue where mageDelTree($path) would delete the cache directory
+     * Then this module would recreate it, resulting in incorrect permissions/ownership
+     *
+     * @param $path
+     */
+    protected function timageDeleteCacheFiles($path) {
+        if (is_dir($path)) {
+            $entries = scandir($path);
+            foreach ($entries as $entry) {
+                if ($entry != '.' && $entry != '..') {
+                    @unlink($path . DS . $entry);
+                }
+            }
+            @rmdir($path);
+        } else {
+            @unlink($path);
+        }
     }
 }
