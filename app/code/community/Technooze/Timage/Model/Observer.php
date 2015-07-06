@@ -45,7 +45,11 @@ class Technooze_Timage_Model_Observer
             return;
         }
         $cacheDir = Mage::getBaseDir('media') . DS . 'catalog' . DS . 'cache';
-        $this->timageDeleteCacheFiles($cacheDir);
+        if (!is_dir($cacheDir)){
+            mkdir($cacheDir, 0775, true);
+        } else {
+            $this->timageDeleteCacheFiles($cacheDir);
+        }
         //@mkdir($cacheDir);
         return $this;
     }
@@ -79,7 +83,9 @@ class Technooze_Timage_Model_Observer
                     }
                 }
             }
-            @rmdir($path);
+            /* Removed the deletion of directories as we don't actually have to remove them
+               to clear the cache. We only need to remove the cached image files. */
+            //@rmdir($path);
         } else {
             @unlink($path);
         }
