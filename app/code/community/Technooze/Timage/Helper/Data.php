@@ -336,9 +336,16 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function imagePath($img='')
     {
-		$img = str_replace(array(Mage::getStoreConfig(Mage_Core_Model_Store::XML_PATH_UNSECURE_BASE_URL), Mage::getStoreConfig(Mage_Core_Model_Store::XML_PATH_SECURE_BASE_URL)), '', $img);
+        $unsecure_media_url = Mage::getStoreConfig('web/unsecure/base_media_url');
+        $secure_media_url = Mage::getStoreConfig('web/secure/base_media_url');
+		$img = str_replace(array(
+            $unsecure_media_url, // unsecure media url
+            $secure_media_url, // secure media url
+            str_replace(array('http:', 'https:'), '', $unsecure_media_url), // unsecure media url without https?
+            str_replace(array('http:', 'https:'), '', $secure_media_url), // secure media url without https?
+        ), '', $img);
         $img = trim(str_replace('/', DS, $img), DS);
-        $this->img = BP . DS . $img;
+        $this->img = BP . DS . 'media' . DS . $img;
 
         if((!file_exists($this->img) || !is_file($this->img)) && !empty($this->placeHolder))
         {
