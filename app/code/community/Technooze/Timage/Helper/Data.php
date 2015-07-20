@@ -62,7 +62,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      */
     private function getBaseUrl()
     {
-        $baseUrl = Mage::getStoreConfig(Mage_Core_Model_Store::XML_PATH_UNSECURE_BASE_URL);
+        $baseUrl = Mage::getStoreConfig('web/unsecure/base_media_url');
         return preg_replace('#^https?://#', '//', $baseUrl);
     }
 
@@ -142,7 +142,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function cachedImageUrl()
     {
-        $img = str_replace(BP, '', $this->cachedImage);
+        $img = str_replace(array(BP . DS . 'media', BP), '', $this->cachedImage);
         $img = trim(str_replace('\\', '/', $img), '/');
 
         return $this->baseUrl . $img;
