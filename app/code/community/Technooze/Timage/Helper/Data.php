@@ -67,17 +67,38 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Get magento theme or default placeholder
+     *
+     * @return string
+     */
+    public function getPlaceholderFile()
+    {
+        if(empty($this->placeHolder)) {
+
+            $skinBaseDir     = Mage::getDesign()->getSkinBaseDir();
+            $skinPlaceholder = "/images/catalog/product/placeholder/image.jpg";
+            if (file_exists($skinBaseDir . $skinPlaceholder)) {
+                $baseDir = $skinBaseDir;
+            } else {
+                $baseDir = Mage::getDesign()->getSkinBaseDir(array('_theme' => 'default'));
+                if (!file_exists($baseDir . $skinPlaceholder)) {
+                    $baseDir = Mage::getDesign()->getSkinBaseDir(array('_theme' => 'default', '_package' => 'base'));
+                }
+            }
+
+            $this->placeHolder = $baseDir . $skinPlaceholder;
+        }
+
+        return $this->placeHolder;
+    }
+
+    /**
      * @param string $img
      * @return $this
      */
     public function init($img = '')
     {
         $this->_reset();
-
-        if(empty($this->placeHolder))
-        {
-            $this->placeHolder = Mage::getDesign()->getSkinUrl('images/catalog/product/placeholder/image.jpg');
-        }
 
         if($img)
         {
@@ -336,30 +357,13 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function imagePath($img='')
     {
-        $unsecure_media_url = Mage::getStoreConfig('web/unsecure/base_media_url');
-        $secure_media_url = Mage::getStoreConfig('web/secure/base_media_url');
-		$img = str_replace(array(
-            $unsecure_media_url, // unsecure media url
-            $secure_media_url, // secure media url
-            str_replace(array('http:', 'https:'), '', $unsecure_media_url), // unsecure media url without https?
-            str_replace(array('http:', 'https:'), '', $secure_media_url), // secure media url without https?
-        ), '', $img);
-        $img = trim(str_replace('/', DS, $img), DS);
-        $this->img = BP . DS . 'media' . DS . $img;
+        $mediaDir = Mage::getBaseDir();
 
-        /** 
-         * First check this file on FS
-         * If it doesn't exist - try to download it from DB
-         */
-        $filename = str_replace("media" . DS, "", $img);
-        if(!file_exists($filename)) {
-            Mage::helper('core/file_storage_database')->saveFileToFilesystem($filename);
-        }
+        $img = trim(str_replace('/', DS, $img), DS);
+        $this->img = $mediaDir .  DS . $img;
         
-        if((!file_exists($this->img) || !is_file($this->img)) && !empty($this->placeHolder))
-        {
-            $this->imagePath($this->placeHolder);
-            $this->placeHolder = false;
+        if((!file_exists($this->img) || !is_file($this->img)) && !empty($this->getPlaceholderFile())) {
+            $this->img = $this->getPlaceholderFile();
         }
     }
 
