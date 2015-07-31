@@ -357,7 +357,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function imagePath($img='')
     {
-        $mediaDir = Mage::getBaseDir('media');
+        $mediaDir = Mage::getBaseDir();
 
         $img = trim(str_replace('/', DS, $img), DS);
         $this->img = $mediaDir .  DS . $img;
