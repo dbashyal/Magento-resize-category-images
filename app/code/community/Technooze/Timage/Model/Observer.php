@@ -33,7 +33,7 @@ class Technooze_Timage_Model_Observer
     }
 
     /**
-     * Clean full page cache
+     * Clean full category image cache in response to catalog (product) image cache clean
      *
      * @param $observer
      *
@@ -41,9 +41,6 @@ class Technooze_Timage_Model_Observer
      */
     public function cleanCache($observer)
     {
-        if ($observer->getType() != 'timage' ){
-            return;
-        }
         $cacheDir = Mage::getBaseDir('media') . DS . 'catalog' . DS . 'cache';
         if (!is_dir($cacheDir)){
             mkdir($cacheDir, 0775, true);
