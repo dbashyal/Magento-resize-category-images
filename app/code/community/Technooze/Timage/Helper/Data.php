@@ -1,14 +1,17 @@
 <?php
 /**
-* @category   Technooze/Modules/magento-how-tos
-* @package    Technooze_Timage
-* @author     Damodar Bashyal (http://dltr.org/)
-* @link       http://j.mp/resizeImage
-* @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @category   Technooze/Modules/magento-how-tos
+ * @package    Technooze_Timage
+ * @author     Damodar Bashyal (http://dltr.org/)
+ * @link       http://j.mp/resizeImage
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  * ref: /lib/Varien/Image.php
-*/
+ */
 class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
 {
+    /* @var $imageOb Varien_Image */
+    private $imageObj = '';
+
     var
         $width = null,
         $height = null,
@@ -21,7 +24,6 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         $cachedImageUrl = '',
         $ext = '',
         $bgColor = array(255, 255, 255),
-        $imageObj = '',
         $baseUrl = '',
         $placeHolder = false,
 
@@ -32,7 +34,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         $constrainOnly = true,
         $keepFrame = true,
         $quality
-        ;
+    ;
 
     /**
      * Reset all previous data
@@ -100,11 +102,6 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
     public function init($img = '')
     {
         $this->_reset();
-
-        if(empty($this->placeHolder))
-        {
-            $this->placeHolder = Mage::getDesign()->getSkinUrl('images/catalog/product/placeholder/image.jpg');
-        }
 
         if($img)
         {
@@ -176,7 +173,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * @return string|void
+     * @return string
      */
     public function getCroppedCache()
     {
@@ -188,10 +185,12 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         }
 
         $this->cropIt();
+
+        return '';
     }
 
     /**
-     * @return string|void
+     * @return string
      */
     public function cacheIt()
     {
@@ -203,6 +202,8 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         }
 
         $this->resizer();
+
+        return '';
     }
 
     /**
@@ -297,7 +298,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         $this->centerCrop = true;
 
         $cache = $this->getCroppedCache();
-        if($cache){
+        if(!empty($cache)){
             $this->img = $cache;
         } else {
             try{
@@ -305,7 +306,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
                 $height = $this->height;
                 $origWidth = $this->getOriginalWidth();
                 $origHeight = $this->getOriginalHeight();
-               
+
                 $ratio = max($width / $origWidth, $height / $origHeight);
                 $y = ($origHeight - $height / $ratio) / 2;
                 $newHeight = $height / $ratio;
@@ -315,7 +316,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
                 if($origHeight > $newHeight) {
                     $bottom = $top = ($origHeight - $newHeight) / 2;
                 } else {
-                     $bottom = $top = 0;
+                    $bottom = $top = 0;
                 }
 
                 if($origWidth > $newWidth) {
@@ -348,7 +349,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
     {
         $this->centerCrop = false;
         $cache = $this->getCroppedCache();
-        if($cache){
+        if(!empty($cache)){
             $this->img = $cache;
         } else {
             try{
@@ -411,30 +412,22 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function imagePath($img='')
     {
-        $unsecure_media_url = Mage::getStoreConfig('web/unsecure/base_media_url');
-        $secure_media_url = Mage::getStoreConfig('web/secure/base_media_url');
-		$img = str_replace(array(
-            $unsecure_media_url, // unsecure media url
-            $secure_media_url, // secure media url
-            str_replace(array('http:', 'https:'), '', $unsecure_media_url), // unsecure media url without https?
-            str_replace(array('http:', 'https:'), '', $secure_media_url), // secure media url without https?
-        ), '', $img);
-        $img = trim(str_replace('/', DS, $img), DS);
-        $this->img = BP . DS . 'media' . DS . $img;
+        $mediaDir = Mage::getBaseDir('media');
+        $mediaUrl = Mage::getBaseUrl('media');
 
-        /** 
+        $img = trim(str_replace(array($mediaUrl, '/', '\\'), DS, $img), DS);
+        $this->img = $mediaDir .  DS . $img;
+
+        /**
          * First check this file on FS
          * If it doesn't exist - try to download it from DB
          */
-        $filename = str_replace("media" . DS, "", $img);
-        if(!file_exists($filename)) {
-            Mage::helper('core/file_storage_database')->saveFileToFilesystem($filename);
+        if(!file_exists($this->img)) {
+            Mage::helper('core/file_storage_database')->saveFileToFilesystem($this->img);
         }
-        
-        if((!file_exists($this->img) || !is_file($this->img)) && !empty($this->placeHolder))
-        {
-            $this->imagePath($this->placeHolder);
-            $this->placeHolder = false;
+
+        if((!file_exists($this->img) || !is_file($this->img)) && !empty($this->getPlaceholderFile())) {
+            $this->img = $this->getPlaceholderFile();
         }
     }
 
