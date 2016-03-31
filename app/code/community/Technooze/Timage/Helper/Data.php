@@ -68,6 +68,32 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Get magento theme or default placeholder by @sergy-gzh
+     *
+     * @return string
+     */
+    public function getPlaceholderFile()
+    {
+        if(empty($this->placeHolder)) {
+
+            $skinBaseDir     = Mage::getDesign()->getSkinBaseDir();
+            $skinPlaceholder = "/images/catalog/product/placeholder/image.jpg";
+            if (file_exists($skinBaseDir . $skinPlaceholder)) {
+                $baseDir = $skinBaseDir;
+            } else {
+                $baseDir = Mage::getDesign()->getSkinBaseDir(array('_theme' => 'default'));
+                if (!file_exists($baseDir . $skinPlaceholder)) {
+                    $baseDir = Mage::getDesign()->getSkinBaseDir(array('_theme' => 'default', '_package' => 'base'));
+                }
+            }
+
+            $this->placeHolder = $baseDir . $skinPlaceholder;
+        }
+
+        return $this->placeHolder;
+    }
+
+    /**
      * @param string $img
      * @return $this
      */
