@@ -10,7 +10,7 @@
 <config>
     <modules>
         <Technooze_Timage>
-            <version>0.2.0</version>
+            <version>0.3.0</version>
         </Technooze_Timage>
     </modules>
     <frontend>
@@ -33,13 +33,13 @@
     </frontend>
     <global>
         <cache>
-            <types>
-                <timage translate="label,description" module="technooze_timage">
-                    <label>Category T-image Cache</label>
-                    <description>Deletes all cached images created by timage extension.</description>
-                    <tags>TIMAGE</tags>
-                </timage>
-            </types>
+            <!--<types>-->
+                <!--<timage translate="label,description" module="technooze_timage">-->
+                    <!--<label>Category T-image Cache</label>-->
+                    <!--<description>Deletes all cached images created by timage extension.</description>-->
+                    <!--<tags>TIMAGE</tags>-->
+                <!--</timage>-->
+            <!--</types>-->
         </cache>
         <models>
             <timage>
@@ -59,14 +59,14 @@
     </global>
     <adminhtml>
         <events>
-            <adminhtml_cache_refresh_type>
+            <clean_catalog_images_cache_after>
                 <observers>
                     <timage_clean_cache>
                         <class>timage/observer</class>
                         <method>cleanCache</method>
                     </timage_clean_cache>
                 </observers>
-            </adminhtml_cache_refresh_type>
+            </clean_catalog_images_cache_after>
         </events>
     </adminhtml>
 </config>
