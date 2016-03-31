@@ -1,10 +1,11 @@
 <?php
+
 /**
-* @category   Technooze/Modules/magento-how-tos
-* @package    Technooze_Timage
-* @author     Damodar Bashyal (http://dltr.org/)
-* @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*/
+ * @category   Technooze/Modules/magento-how-tos
+ * @package    Technooze_Timage
+ * @author     Damodar Bashyal (http://dltr.org/)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
 class Technooze_Timage_Model_Observer
 {
     /**
@@ -33,18 +34,16 @@ class Technooze_Timage_Model_Observer
     }
 
     /**
-     * Clean timage cache
+     * Clean full category image cache in response to catalog (product) image cache clean
+     *
+     * @param $observer
      *
      * @return Technooze_Timage_Model_Observer
      */
     public function cleanCache(Varien_Event_Observer $observer)
     {
-        $type = $observer->getType();
-        if($type == 'timage') {
-            $cacheDir = Mage::getBaseDir('media') . DS . 'catalog' . DS . 'cache';
-            mageDelTree($cacheDir);
-            @mkdir($cacheDir);
-        }
+        $cacheDir = Mage::getBaseDir('media') . DS . 'catalog' . DS . 'cache';
+        mageDelTree($cacheDir);
         return $this;
     }
 
