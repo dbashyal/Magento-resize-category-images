@@ -26,6 +26,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         $placeHolder = false,
 
         // image settings
+        $centerCrop = false,
         $keepTransparency = true,
         $aspectRatio = true,
         $constrainOnly = true,
@@ -261,6 +262,53 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Crop an image from the center
+     * Using original image size and desired size
+     * @todo: Possibly we can merge centerCrop() & crop()
+     */
+    public function centerCrop() {
+
+        $this->centerCrop = true;
+
+        $cache = $this->getCroppedCache();
+        if($cache){
+            $this->img = $cache;
+        } else {
+            try{
+                $width = $this->width;
+                $height = $this->height;
+                $origWidth = $this->getOriginalWidth();
+                $origHeight = $this->getOriginalHeight();
+               
+                $ratio = max($width / $origWidth, $height / $origHeight);
+                $y = ($origHeight - $height / $ratio) / 2;
+                $newHeight = $height / $ratio;
+                $x = ($origWidth - $width / $ratio) / 2;
+                $newWidth = $width / $ratio;
+
+                if($origHeight > $newHeight) {
+                    $bottom = $top = ($origHeight - $newHeight) / 2;
+                } else {
+                     $bottom = $top = 0;
+                }
+
+                if($origWidth > $newWidth) {
+                    $left = $right = ($origWidth - $newWidth) / 2;
+                } else {
+                    $left = $right = 0;
+                }
+
+                $this->cropIt($top, $left, $right, $bottom);
+
+            } catch(Exception $e){
+                Mage::throwException($e->getMessage());
+            }
+        }
+        return $this;
+
+    }
+
+    /**
      * Crop an image.
      *
      * @param int $top. Default value is 0
@@ -272,6 +320,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function crop($top=0, $left=0, $right=0, $bottom=0)
     {
+        $this->centerCrop = false;
         $cache = $this->getCroppedCache();
         if($cache){
             $this->img = $cache;
