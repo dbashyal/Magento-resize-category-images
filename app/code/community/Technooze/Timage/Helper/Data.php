@@ -264,6 +264,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * Crop an image from the center
      * Using original image size and desired size
+     * @todo: Possibly we can merge centerCrop() & crop()
      */
     public function centerCrop() {
 
@@ -286,18 +287,18 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
                 $newWidth = $width / $ratio;
 
                 if($origHeight > $newHeight) {
-                    $bottomCrop = $topCrop = ($origHeight - $newHeight) / 2;
+                    $bottom = $top = ($origHeight - $newHeight) / 2;
                 } else {
-                     $bottomCrop = $topCrop = 0;
+                     $bottom = $top = 0;
                 }
 
                 if($origWidth > $newWidth) {
-                    $leftCrop = $rightCrop = ($origWidth - $newWidth) / 2;
+                    $left = $right = ($origWidth - $newWidth) / 2;
                 } else {
-                    $leftCrop = $rightCrop = 0;
+                    $left = $right = 0;
                 }
 
-                $this->cropIt($topCrop, $leftCrop, $rightCrop, $bottomCrop);
+                $this->cropIt($top, $left, $right, $bottom);
 
             } catch(Exception $e){
                 Mage::throwException($e->getMessage());
@@ -319,6 +320,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function crop($top=0, $left=0, $right=0, $bottom=0)
     {
+        $this->centerCrop = false;
         $cache = $this->getCroppedCache();
         if($cache){
             $this->img = $cache;
