@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @category   Technooze/Modules/magento-how-tos
  * @package    Technooze_Timage
@@ -33,8 +34,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         $aspectRatio = true,
         $constrainOnly = true,
         $keepFrame = true,
-        $quality
-    ;
+        $quality;
 
     /**
      * Reset all previous data
@@ -76,9 +76,9 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getPlaceholderFile()
     {
-        if(empty($this->placeHolder)) {
+        if (empty($this->placeHolder)) {
 
-            $skinBaseDir     = Mage::getDesign()->getSkinBaseDir();
+            $skinBaseDir = Mage::getDesign()->getSkinBaseDir();
             $skinPlaceholder = "/images/catalog/product/placeholder/image.jpg";
             if (file_exists($skinBaseDir . $skinPlaceholder)) {
                 $baseDir = $skinBaseDir;
@@ -104,8 +104,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         Varien_Profiler::start('TImage::helper::data:init');
         $this->_reset();
 
-        if($img)
-        {
+        if ($img) {
             $this->rawImg = $img;
         }
 
@@ -119,13 +118,13 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         Varien_Profiler::stop('TImage::helper::data:init');
         return $this;
     }
-    
+
     protected function _getImageObj()
     {
-        if ($this->imageObj == null) {
+        if (empty($this->imageObj)) {
             $this->imageObj = new Varien_Image($this->img);
         }
-        
+
         return $this->imageObj;
     }
 
@@ -133,7 +132,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      * @param null|int $width
      * @return $this
      */
-    public function setWidth($width=null)
+    public function setWidth($width = null)
     {
         $this->width = $width;
         return $this;
@@ -143,7 +142,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      * @param null|int $height
      * @return $this
      */
-    public function setHeight($height=null)
+    public function setHeight($height = null)
     {
         $this->height = $height;
         return $this;
@@ -154,15 +153,13 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      * @param null|int $height
      * @return string
      */
-    public function resize($width=null, $height=null)
+    public function resize($width = null, $height = null)
     {
-        if($width)
-        {
+        if ($width) {
             $this->width = $width;
         }
 
-        if($height)
-        {
+        if ($height) {
             $this->height = $height;
         }
 
@@ -187,10 +184,9 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getCroppedCache()
     {
-        $this->croppedImage = $this->croppedCacheDir . md5($this->img . $this->width . $this->height) . '.' .$this->ext;
+        $this->croppedImage = $this->croppedCacheDir . md5($this->img . $this->width . $this->height) . '.' . $this->ext;
 
-        if(file_exists($this->croppedImage))
-        {
+        if (file_exists($this->croppedImage)) {
             return $this->croppedImage;
         }
 
@@ -204,10 +200,9 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function cacheIt()
     {
-        $this->cachedImage = $this->cacheDir . md5($this->img . $this->width . $this->height) . '.' .$this->ext;
+        $this->cachedImage = $this->cacheDir . md5($this->img . $this->width . $this->height) . '.' . $this->ext;
 
-        if(file_exists($this->cachedImage))
-        {
+        if (file_exists($this->cachedImage)) {
             return $this->cachedImage;
         }
 
@@ -234,7 +229,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      * @param bool $bool
      * @return $this
      */
-    public function keepAspectRatio($bool=true)
+    public function keepAspectRatio($bool = true)
     {
         $this->aspectRatio = $bool;
         return $this;
@@ -247,7 +242,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      * @param bool $bool
      * @return $this
      */
-    public function keepFrame($bool=true)
+    public function keepFrame($bool = true)
     {
         $this->keepFrame = $bool;
         return $this;
@@ -260,7 +255,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      * @param bool $bool
      * @return $this
      */
-    public function constrainOnly($bool=false)
+    public function constrainOnly($bool = false)
     {
         $this->constrainOnly = $bool;
         return $this;
@@ -285,13 +280,14 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      * @param int $right
      * @param int $bottom
      */
-    private function cropIt($top=0, $left=0, $right=0, $bottom=0){
+    private function cropIt($top = 0, $left = 0, $right = 0, $bottom = 0)
+    {
         Varien_Profiler::start('TImage::helper::data:cropIt');
         try {
             $this->_getImageObj()->crop($top, $left, $right, $bottom);
             $this->_getImageObj()->save($this->croppedImage);
             $this->img = $this->croppedImage;
-        } catch(Exception $e){
+        } catch (Exception $e) {
             Mage::throwException($e->getMessage());
         }
         Varien_Profiler::stop('TImage::helper::data:cropIt');
@@ -302,15 +298,16 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      * Using original image size and desired size
      * @todo: Possibly we can merge centerCrop() & crop()
      */
-    public function centerCrop() {
+    public function centerCrop()
+    {
 
         $this->centerCrop = true;
 
         $cache = $this->getCroppedCache();
-        if(!empty($cache)){
+        if (!empty($cache)) {
             $this->img = $cache;
         } else {
-            try{
+            try {
                 $width = $this->width;
                 $height = $this->height;
                 $origWidth = $this->getOriginalWidth();
@@ -322,13 +319,13 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
                 $x = ($origWidth - $width / $ratio) / 2;
                 $newWidth = $width / $ratio;
 
-                if($origHeight > $newHeight) {
+                if ($origHeight > $newHeight) {
                     $bottom = $top = ($origHeight - $newHeight) / 2;
                 } else {
                     $bottom = $top = 0;
                 }
 
-                if($origWidth > $newWidth) {
+                if ($origWidth > $newWidth) {
                     $left = $right = ($origWidth - $newWidth) / 2;
                 } else {
                     $left = $right = 0;
@@ -336,7 +333,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
 
                 $this->cropIt($top, $left, $right, $bottom);
 
-            } catch(Exception $e){
+            } catch (Exception $e) {
                 Mage::throwException($e->getMessage());
             }
         }
@@ -347,28 +344,28 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * Crop an image.
      *
-     * @param int $top. Default value is 0
-     * @param int $left. Default value is 0
-     * @param int $right. Default value is 0
-     * @param int $bottom. Default value is 0
+     * @param int $top . Default value is 0
+     * @param int $left . Default value is 0
+     * @param int $right . Default value is 0
+     * @param int $bottom . Default value is 0
      * @access public
      * @return $this
      */
-    public function crop($top=0, $left=0, $right=0, $bottom=0)
+    public function crop($top = 0, $left = 0, $right = 0, $bottom = 0)
     {
         $this->centerCrop = false;
         $cache = $this->getCroppedCache();
-        if(!empty($cache)){
+        if (!empty($cache)) {
             $this->img = $cache;
         } else {
-            try{
+            try {
                 $width = $this->width;
                 $height = $this->height;
                 $origWidth = $this->getOriginalWidth();
                 $origHeight = $this->getOriginalHeight();
                 $cropHeightTrim = $cropWidthTrim = 0;
 
-                if($width && $height){
+                if ($width && $height) {
 
                     $origRatio = $origWidth / $origHeight;
                     $cropRatio = $width / $height;
@@ -382,7 +379,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
                     }
                 }
 
-                if(!$top && !$left && !$right && !$bottom){
+                if (!$top && !$left && !$right && !$bottom) {
                     if ($cropWidthTrim) {
                         $right = $left = $cropWidthTrim;
                     } elseif ($cropHeightTrim) {
@@ -390,7 +387,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
                     }
                 }
                 $this->cropIt($top, $left, $right, $bottom);
-            } catch(Exception $e){
+            } catch (Exception $e) {
                 Mage::throwException($e->getMessage());
             }
         }
@@ -399,10 +396,10 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
 
     public function resizer()
     {
-        try{
-            Varien_Profiler::start('TImage::helper::data:resizer');            $this->imageObj->quality($this->quality);
+        try {
+            Varien_Profiler::start('TImage::helper::data:resizer');
             $this->_getImageObj()->quality($this->quality);
-	    $this->_getImageObj()->constrainOnly($this->aspectRatio);
+            $this->_getImageObj()->constrainOnly($this->aspectRatio);
             $this->_getImageObj()->keepAspectRatio($this->aspectRatio);
             $this->_getImageObj()->keepFrame($this->keepFrame);
             $this->_getImageObj()->keepTransparency($this->keepTransparency);
@@ -410,7 +407,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
             $this->_getImageObj()->resize($this->width, $this->height);
             $this->_getImageObj()->save($this->cachedImage);
             Varien_Profiler::stop('TImage::helper::data:resizer');
-        } catch(Exception $e){
+        } catch (Exception $e) {
             Mage::throwException($e->getMessage());
         }
     }
@@ -418,23 +415,23 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * @param string $img
      */
-    public function imagePath($img='')
+    public function imagePath($img = '')
     {
         $mediaDir = Mage::getBaseDir('media');
         $mediaUrl = Mage::getBaseUrl('media');
 
         $img = trim(str_replace(array($mediaUrl, '/', '\\'), DS, $img), DS);
-        $this->img = $mediaDir .  DS . $img;
+        $this->img = $mediaDir . DS . $img;
 
         /**
          * First check this file on FS
          * If it doesn't exist - try to download it from DB
          */
-        if(!file_exists($this->img)) {
+        if (!file_exists($this->img)) {
             Mage::helper('core/file_storage_database')->saveFileToFilesystem($this->img);
         }
 
-        if((!file_exists($this->img) || !is_file($this->img)) && !empty($this->getPlaceholderFile())) {
+        if ((!file_exists($this->img) || !is_file($this->img)) && !empty($this->getPlaceholderFile())) {
             $this->img = $this->getPlaceholderFile();
         }
     }
@@ -444,14 +441,12 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         $cache = BP . DS . 'media' . DS . 'catalog' . DS . 'cache' . DS;
         $cropCache = $cache . 'cropped' . DS;
 
-        if(!is_dir($cache))
-        {
-            mkdir($cache, 0775, true);
+        if (!is_dir($cache)) {
+            @mkdir($cache, 0775, true);
         }
 
-        if(!is_dir($cropCache))
-        {
-            mkdir($cropCache, 0775, true);
+        if (!is_dir($cropCache)) {
+            @mkdir($cropCache, 0775, true);
         }
 
         $this->cacheDir = $cache;

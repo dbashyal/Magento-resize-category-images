@@ -34,11 +34,11 @@
     <global>
         <cache>
             <!--<types>-->
-                <!--<timage translate="label,description" module="technooze_timage">-->
-                    <!--<label>Category T-image Cache</label>-->
-                    <!--<description>Deletes all cached images created by timage extension.</description>-->
-                    <!--<tags>TIMAGE</tags>-->
-                <!--</timage>-->
+            <!--<timage translate="label,description" module="technooze_timage">-->
+            <!--<label>Category T-image Cache</label>-->
+            <!--<description>Deletes all cached images created by timage extension.</description>-->
+            <!--<tags>TIMAGE</tags>-->
+            <!--</timage>-->
             <!--</types>-->
         </cache>
         <models>

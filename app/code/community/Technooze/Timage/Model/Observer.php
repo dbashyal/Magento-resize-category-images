@@ -1,10 +1,11 @@
 <?php
+
 /**
-* @category   Technooze/Modules/magento-how-tos
-* @package    Technooze_Timage
-* @author     Damodar Bashyal (http://dltr.org/)
-* @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*/
+ * @category   Technooze/Modules/magento-how-tos
+ * @package    Technooze_Timage
+ * @author     Damodar Bashyal (http://dltr.org/)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
 class Technooze_Timage_Model_Observer
 {
     /**
@@ -43,7 +44,6 @@ class Technooze_Timage_Model_Observer
     {
         $cacheDir = Mage::getBaseDir('media') . DS . 'catalog' . DS . 'cache';
         mageDelTree($cacheDir);
-	mkdir($cacheDir, 0775, true);
         return $this;
     }
 
