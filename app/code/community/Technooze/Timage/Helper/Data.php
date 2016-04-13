@@ -431,7 +431,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
             Mage::helper('core/file_storage_database')->saveFileToFilesystem($this->img);
         }
 
-        if ((!file_exists($this->img) || !is_file($this->img)) && !empty($this->getPlaceholderFile())) {
+        if ((!file_exists($this->img) || !is_file($this->img)) && $this->getPlaceholderFile()) {
             $this->img = $this->getPlaceholderFile();
         }
     }
