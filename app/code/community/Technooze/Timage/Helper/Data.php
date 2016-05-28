@@ -399,7 +399,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         try {
             Varien_Profiler::start('TImage::helper::data:resizer');
             $this->_getImageObj()->quality($this->quality);
-            $this->_getImageObj()->constrainOnly($this->aspectRatio);
+            $this->_getImageObj()->constrainOnly($this->constrainOnly);
             $this->_getImageObj()->keepAspectRatio($this->aspectRatio);
             $this->_getImageObj()->keepFrame($this->keepFrame);
             $this->_getImageObj()->keepTransparency($this->keepTransparency);
