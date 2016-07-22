@@ -34,7 +34,13 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         $aspectRatio = true,
         $constrainOnly = true,
         $keepFrame = true,
-        $quality;
+        $quality,
+
+        // support ssl/non-ssl urls
+        // set to false ip using IP
+        // see issue: #20
+        $removeHttp = true
+;
 
     /**
      * Reset all previous data
@@ -61,12 +67,37 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * @return boolean
+     */
+    public function isRemoveHttp()
+    {
+        return $this->removeHttp;
+    }
+
+    /**
+     * @param boolean $removeHttp
+     * @return Technooze_Timage_Helper_Data
+     */
+    public function setRemoveHttp($removeHttp)
+    {
+        $this->removeHttp = $removeHttp;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     private function getBaseUrl()
     {
         $baseUrl = Mage::getStoreConfig('web/unsecure/base_media_url');
-        return preg_replace('#^https?://#', '//', $baseUrl);
+
+        $removeHttp = $this->isRemoveHttp();
+
+        // fix for warning "page contains secure and nonsecure items"
+        if($removeHttp){
+            $baseUrl = preg_replace('#^https?://#', '//', $baseUrl);
+        }
+        return $baseUrl;
     }
 
     /**
@@ -119,6 +150,9 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         return $this;
     }
 
+    /**
+     * @return Varien_Image
+     */
     protected function _getImageObj()
     {
         if (empty($this->imageObj)) {
@@ -394,6 +428,9 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         return $this;
     }
 
+    /**
+     *
+     */
     public function resizer()
     {
         try {
@@ -436,6 +473,9 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         }
     }
 
+    /**
+     *
+     */
     public function cacheDir()
     {
         $cache = BP . DS . 'media' . DS . 'catalog' . DS . 'cache' . DS;
