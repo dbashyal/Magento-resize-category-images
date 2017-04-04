@@ -34,6 +34,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         $aspectRatio = true,
         $constrainOnly = true,
         $keepFrame = true,
+        $keepFilename = false,
         $quality,
 
         // support ssl/non-ssl urls
@@ -62,6 +63,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         $this->aspectRatio = true;
         $this->constrainOnly = true;
         $this->keepFrame = true;
+        $this->keepFilename = false;
         $this->quality = null;
         return $this;
     }
@@ -234,7 +236,12 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function cacheIt()
     {
-        $this->cachedImage = $this->cacheDir . md5($this->img . $this->width . $this->height) . '.' . $this->ext;
+        if( !$this->keepFilename ){
+            $this->cachedImage = $this->cacheDir . md5($this->img . $this->width . $this->height) . '.' . $this->ext;
+        }else{
+            $parts = pathinfo($this->img);
+            $this->cachedImage = $this->cacheDir . $parts['filename'] . '_' . $this->width . '_' . $this->height . '.' . $this->ext;
+        }
 
         if (file_exists($this->cachedImage)) {
             return $this->cachedImage;
@@ -279,6 +286,17 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
     public function keepFrame($bool = true)
     {
         $this->keepFrame = $bool;
+        return $this;
+    }
+
+    /**
+     * If set to true, filename will not be md5 hashed
+     * @param bool $bool
+     * @return $this
+     */
+    public function keepFilename($bool = false)
+    {
+        $this->keepFilename = $bool;
         return $this;
     }
 
