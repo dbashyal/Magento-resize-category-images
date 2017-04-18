@@ -49,4 +49,4 @@ If you are working on localhost using IP, you need to add `->setRemoveHttp(false
 	?>" alt="alt text"/>
 ```
 
-###visit: dltr.org for more [Magento Tips, Tricks and Free Extensions](http://dltr.org/).
+### visit: dltr.org for more [Magento Tips, Tricks and Free Extensions](http://dltr.org/).
