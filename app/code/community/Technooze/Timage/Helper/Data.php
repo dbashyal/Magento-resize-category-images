@@ -27,6 +27,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         $bgColor = array(255, 255, 255),
         $baseUrl = '',
         $placeHolder = false,
+        $developerMode = false,
 
         // image settings
         $centerCrop = false,
@@ -40,8 +41,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         // support ssl/non-ssl urls
         // set to false ip using IP
         // see issue: #20
-        $removeHttp = true
-;
+        $removeHttp = true;
 
     /**
      * Reset all previous data
@@ -64,9 +64,41 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         $this->constrainOnly = true;
         $this->keepFrame = true;
         $this->keepFilename = false;
+        $this->developerMode = false;
         $this->quality = null;
         return $this;
     }
+
+    /**
+     * @return bool
+     */
+    public function isDeveloperMode()
+    {
+        return $this->developerMode;
+    }
+
+    /**
+     * @param bool $developerMode
+     * @return Technooze_Timage_Helper_Data
+     */
+    public function setDeveloperMode($developerMode)
+    {
+        $this->developerMode = $developerMode;
+        return $this;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getRandomString()
+    {
+        if ($this->isDeveloperMode()) {
+            return '_' . time();
+        }
+        return '';
+    }
+
 
     /**
      * @return boolean
@@ -96,7 +128,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         $removeHttp = $this->isRemoveHttp();
 
         // fix for warning "page contains secure and nonsecure items"
-        if($removeHttp){
+        if ($removeHttp) {
             $baseUrl = preg_replace('#^https?://#', '//', $baseUrl);
         }
         return $baseUrl;
@@ -220,7 +252,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getCroppedCache()
     {
-        $this->croppedImage = $this->croppedCacheDir . md5($this->img . $this->width . $this->height) . '.' . $this->ext;
+        $this->croppedImage = $this->croppedCacheDir . md5($this->img . $this->width . $this->height . $this->getRandomString()) . '.' . $this->ext;
 
         if (file_exists($this->croppedImage)) {
             return $this->croppedImage;
@@ -236,11 +268,11 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function cacheIt()
     {
-        if( !$this->keepFilename ){
-            $this->cachedImage = $this->cacheDir . md5($this->img . $this->width . $this->height) . '.' . $this->ext;
-        }else{
+        if (!$this->keepFilename) {
+            $this->cachedImage = $this->cacheDir . md5($this->img . $this->width . $this->height . $this->getRandomString()) . '.' . $this->ext;
+        } else {
             $parts = pathinfo($this->img);
-            $this->cachedImage = $this->cacheDir . $parts['filename'] . '_' . $this->width . '_' . $this->height . '.' . $this->ext;
+            $this->cachedImage = $this->cacheDir . $parts['filename'] . '_' . $this->width . '_' . $this->height . $this->getRandomString() . '.' . $this->ext;
         }
 
         if (file_exists($this->cachedImage)) {
@@ -500,11 +532,15 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
         $cropCache = $cache . 'cropped' . DS;
 
         if (!is_dir($cache)) {
-            @mkdir($cache, 0775, true);
+            if (!mkdir($cache, 0775, true) && !is_dir($cache)) {
+                Mage::throwException($this->__('Directory "%s" was not created', $cache));
+            }
         }
 
         if (!is_dir($cropCache)) {
-            @mkdir($cropCache, 0775, true);
+            if (!mkdir($cropCache, 0775, true) && !is_dir($cropCache)) {
+                Mage::throwException($this->__('Directory "%s" was not created', $cropCache));
+            }
         }
 
         $this->cacheDir = $cache;
