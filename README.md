@@ -48,5 +48,18 @@ If you are working on localhost using IP, you need to add `->setRemoveHttp(false
 			  ->resize() 
 	?>" alt="alt text"/>
 ```
+If you are cropping image, you might consider using `->setDeveloperMode(true)` on your local/staging so, you can keep changing dimensions and no need to worry about clearing cache.
+
+```PHP
+Mage::helper('timage')
+                ->init(Mage::getBaseUrl('media') . 'catalog/product' . $product['giftcard_image'])
+                ->setWidth(780)
+                ->setHeight(505)
+                ->keepFilename(true)
+                ->keepAspectRatio(false)
+                ->setDeveloperMode(true)
+                ->crop(280, 10, 10, 280)
+                ->resize();
+```
 
 ### visit: dltr.org for more [Magento Tips, Tricks and Free Extensions](http://dltr.org/).
