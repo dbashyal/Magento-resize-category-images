@@ -115,6 +115,7 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
     public function setRemoveHttp($removeHttp)
     {
         $this->removeHttp = $removeHttp;
+        $this->baseUrl = $this->getBaseUrl(); // fetch baseUrl again, after this method is called
         return $this;
     }
 
