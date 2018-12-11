@@ -248,9 +248,10 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * @param $cropIt bool
      * @return string
      */
-    public function getCroppedCache()
+    public function getCroppedCache($cropIt = true)
     {
         $this->croppedImage = $this->croppedCacheDir . md5($this->img . $this->width . $this->height . $this->getRandomString()) . '.' . $this->ext;
 
@@ -258,7 +259,9 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
             return $this->croppedImage;
         }
 
-        $this->cropIt();
+        if ($cropIt) {
+            $this->cropIt();
+        }
 
         return '';
     }
@@ -384,10 +387,9 @@ class Technooze_Timage_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function centerCrop()
     {
-
         $this->centerCrop = true;
+        $cache = $this->getCroppedCache(false);
 
-        $cache = $this->getCroppedCache();
         if (!empty($cache)) {
             $this->img = $cache;
         } else {
