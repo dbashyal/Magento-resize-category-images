@@ -61,5 +61,17 @@ Mage::helper('timage')
                 ->crop(280, 10, 10, 280)
                 ->resize();
 ```
+OR, centerCrop:
+```PHP
+Mage::helper('timage')
+            ->init(Mage::getBaseUrl('media') . 'catalog/product' . $image)
+            ->setWidth(120)
+            ->setHeight(25)
+            //->keepFilename(true)
+            //->keepAspectRatio(true)
+            //->setDeveloperMode(true)
+            ->centerCrop()
+            ->resize();
+```
 
 ### visit: dltr.org for more [Magento Tips, Tricks and Free Extensions](http://dltr.org/).
